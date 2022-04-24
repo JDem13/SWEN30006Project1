@@ -18,6 +18,14 @@ public abstract class Connection
   }
 
   String imagePath;
+  
+  public void setLocStart(Location loc_start) {
+	  this.locStart = loc_start;
+  }
+  
+  public void setLocEnd(Location loc_end) {
+	  this.locEnd = loc_end;
+  }
 
   public Location getLocStart() {
     return locStart;

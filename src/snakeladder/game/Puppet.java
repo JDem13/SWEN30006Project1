@@ -16,7 +16,12 @@ public class Puppet extends Actor
   private boolean isAuto;
   private String puppetName;
   private boolean minimumRoll;
- 
+  private Statistics playerStatistics = new Statistics();
+  
+  public Statistics getPlayerStatistics() {
+	  return playerStatistics;
+  }
+   
 
   Puppet(GamePane gp, NavigationPane np, String puppetImage)
   {
@@ -186,10 +191,14 @@ public class Puppet extends Actor
           else {
         	  gamePane.setSimulationPeriod(50);
         	  y = gamePane.toPoint(currentCon.locStart).y;
-        	  if (currentCon.locEnd.y > currentCon.locStart.y)
+        	  if (currentCon.locEnd.y > currentCon.locStart.y) {
         		  dy = gamePane.animationStep;
-        	  else
+        		  gamePane.getPuppet().getPlayerStatistics().addConnection("down");
+        	  }
+        	  else {
         		  dy = -gamePane.animationStep;
+        		  gamePane.getPuppet().getPlayerStatistics().addConnection("up");
+        	  }
         	  if (currentCon instanceof Snake)
         	  {
         		  navigationPane.showStatus("Digesting...");

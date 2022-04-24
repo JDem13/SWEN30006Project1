@@ -53,6 +53,7 @@ public class GamePane extends GameGrid
   {
     this.np = np;
   }
+  
 
   void createGui()
   {
@@ -146,11 +147,58 @@ public class GamePane extends GameGrid
   }
   
   public void reverseSnakes_Ladders() {
-	  //iterate through all connetions
+	  //iterate through all connections
 	  int i;
 	  for(i=0; i<connections.size(); i++) {
-		  //write here
+		  // switch start with end cell and location
+		  int temp_cell = connections.get(i).cellStart;
+		  Location temp_loc = connections.get(i).getLocStart();
+		  connections.get(i).cellStart = connections.get(i).cellEnd;
+		  connections.get(i).cellEnd = temp_cell;
+		  connections.get(i).setLocStart(connections.get(i).getLocEnd());
+		  connections.get(i).setLocEnd(temp_loc);
+		  
 	  }
+  }
+  
+  public void toggleStrategy() {
+	  //implement automated toggle strategy
+	  int up = 0;
+	  int down = 0;
+	  int i;
+	  
+	  //iterate through opponents
+	  for(i=0; i<numberOfPlayers; i++) {
+		  
+		  //check this isn't current player
+		  if(puppets.get(i).getPuppetName() != getPuppet().getPuppetName()) {
+			  
+			  int max_roll = 6*np.getNumberDice();
+			  //iterate through connections
+			  int k;
+			  for(k=0; k<connections.size(); k++) {
+				  
+				  //check if connection lies in correct board index boundary
+				  if ((getPuppet().getCellIndex() < connections.get(i).cellStart)&&
+					  (connections.get(i).cellStart <= (getPuppet().getCellIndex()+max_roll))) {
+					  
+					  //check if connection goes up or down
+					  if(connections.get(i).cellStart < connections.get(i).cellEnd) {
+						  down ++;
+					  }else {
+						  up ++;
+					  }
+				  }
+			  }
+		  }
+	  }
+	  
+	  if(up >= down) {
+		  reverseSnakes_Ladders();
+		  System.out.println(getPuppet().getPuppetName() +
+				             " switched connections orientation");
+	  }
+	  
   }
 
 }

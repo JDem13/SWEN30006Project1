@@ -304,6 +304,11 @@ public class NavigationPane extends GameGrid
         playerPositions.add(puppet.getCellIndex() + "");
       }
       gamePlayCallback.finishGameWithResults(nbRolls % gp.getNumberOfPlayers(), playerPositions);
+      //print puppet statistics
+      int i;
+      for (i=0; i < gp.getNumberOfPlayers(); i++) {
+    	  gp.getAllPuppets().get(i).getPlayerStatistics().printStatistics();
+      }
       gp.resetAllPuppets();
     }
     else
@@ -329,8 +334,10 @@ public class NavigationPane extends GameGrid
   {
     showStatus("Moving...");
     showPips("Pips: " + nb);
-    showScore("# Rolls: " + (++nbRolls));
+    showScore("# Rolls: " + (++nbRolls));   
     gp.getPuppet().go(nb);
+    //call automated toggle function
+    gp.toggleStrategy();
   }
 
   void prepareBeforeRoll() {
@@ -365,6 +372,8 @@ public class NavigationPane extends GameGrid
 		if (n_temp == RANDOM_ROLL_TAG) {
     			n_temp = ServicesRandom.get().nextInt(6) + 1;    		
     		}
+		
+		gp.getPuppet().getPlayerStatistics().addDieRoll(n_temp);
 		nb += n_temp;
 	}
     
