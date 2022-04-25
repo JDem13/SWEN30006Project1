@@ -376,7 +376,7 @@ public class NavigationPane extends GameGrid
 		nb += n_temp;
 	}
 	
-	gp.getPuppet().getPlayerStatistics().addDieRoll(n_temp);
+	gp.getPuppet().getPlayerStatistics().addDieRoll(nb);
     
 	showStatus("Rolling...");
 	showPips("");
