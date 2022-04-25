@@ -21,7 +21,7 @@ public class NavigationPane extends GameGrid
       {
         Monitor.putSleep();
         handBtn.show(1);
-       roll(getDieValue());
+        roll(getDieValue());
         delay(1000);
         handBtn.show(0);
       }

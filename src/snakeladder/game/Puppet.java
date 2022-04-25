@@ -2,7 +2,6 @@ package snakeladder.game;
 
 import ch.aplu.jgamegrid.*;
 import java.awt.Point;
-import java.util.List;
 
 public class Puppet extends Actor
 {
@@ -104,7 +103,7 @@ public class Puppet extends Actor
     cellIndex++;
   }
   
-  private void moveBackwardsCell()
+  void moveBackwardsCell()
   {
     int tens = cellIndex / 10;
     int ones = cellIndex - tens * 10;
@@ -181,16 +180,9 @@ public class Puppet extends Actor
       nbSteps--;
       if (nbSteps == 0)
       {
-    	  
-    	//check if we land on same square as other opponent
-         List<Integer> sameIndex = gamePane.puppetSameSquare(cellIndex + nbSteps, puppetName);
-         //move every player on same cell backwards one
-         int i;
-         for(i=0; i<sameIndex.size(); i++) {
-          	gamePane.getAllPuppets().get(i).moveBackwardsCell();
-          	
-         }
-          
+    	// move puppets landed on backwards one cell
+    	gamePane.movePuppetsLandedOnBack(cellIndex);
+        
         // Check if on connection start
         if ((currentCon = gamePane.getConnectionAt(getLocation())) != null)
         {

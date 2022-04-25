@@ -131,19 +131,16 @@ public class GamePane extends GameGrid
     return (int)(a * y + b);
   }
   
-  List<Integer> puppetSameSquare(int cellIndex, String PuppetName) {
-	  // check if any puppet other than 'PuppetIndex' lies in 
-	  // particular 'cell index'
-	  List<Integer> sameIndex = new ArrayList<>();
-	  int i;
-	  for(i=0; i<numberOfPlayers; i ++) {
-		  if(puppets.get(i).getPuppetName() != PuppetName) {
+  void movePuppetsLandedOnBack(int cellIndex) {
+	  // move all puppets on cell 'cellIndex' (other than puppets.get(currentPuppetIndex)) 
+	  // backwards one cell
+	  for(int i=0; i<numberOfPlayers; i++) {
+		  if(i != currentPuppetIndex) {
 			  if(puppets.get(i).getCellIndex() == cellIndex) {
-				  sameIndex.add(i);
+				  puppets.get(i).moveBackwardsCell();
 			  }
 		  }
 	  }
-	  return sameIndex;
   }
   
   public void reverseSnakes_Ladders() {
