@@ -5,9 +5,9 @@ public class Statistics {
 	private HashMap<Integer, Integer> dieValuesCount = new HashMap<>();
 	private HashMap<String, Integer> connectionsCount = new HashMap<>();
 	
-	public Statistics() {
+	public Statistics(int numberDie) {
 		int i;
-		for(i=1;i<=6;i++) {
+		for(i=numberDie; i<=6*numberDie; i++) {
 			dieValuesCount.put(i, 0);
 		}
 		
@@ -25,16 +25,12 @@ public class Statistics {
 	
 	public void addDieRoll(int roll) {
 		int current = dieValuesCount.get(roll);
-		dieValuesCount.put(roll, current+ 1);
+		dieValuesCount.put(roll, current + 1);
 	}
 	
 	public void addConnection(String direction) {
 		int current = connectionsCount.get(direction);
-		connectionsCount.put(direction, current+ 1);
+		connectionsCount.put(direction, current + 1);
 	}
 	
-	public void printStatistics() {
-		
-		
-	}
 }

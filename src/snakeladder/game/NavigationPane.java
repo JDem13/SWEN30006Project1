@@ -307,7 +307,7 @@ public class NavigationPane extends GameGrid
       //print puppet statistics
       int i;
       for (i=0; i < gp.getNumberOfPlayers(); i++) {
-    	  gp.getAllPuppets().get(i).getPlayerStatistics().printStatistics();
+    	  gp.getAllPuppets().get(i).printPlayerStatistics();
       }
       gp.resetAllPuppets();
     }
@@ -373,9 +373,10 @@ public class NavigationPane extends GameGrid
     			n_temp = ServicesRandom.get().nextInt(6) + 1;    		
     		}
 		
-		gp.getPuppet().getPlayerStatistics().addDieRoll(n_temp);
 		nb += n_temp;
 	}
+	
+	gp.getPuppet().getPlayerStatistics().addDieRoll(n_temp);
     
 	showStatus("Rolling...");
 	showPips("");
