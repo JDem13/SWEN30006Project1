@@ -23,15 +23,16 @@ public class Puppet extends Actor
    
   
   public void printPlayerStatistics() {
-		System.out.print(puppetName + "rolled: " );		
-		int k;
-		for (k=navigationPane.getNumberDice(); k<=6*navigationPane.getNumberDice(); k++) {
-			System.out.print(k + "-" + playerStatistics.getDieValuesCount().get(k) + ", ");
+		System.out.print(puppetName + " rolled: " );		
+		int k=navigationPane.getNumberDice();
+		System.out.print(k + "-" + playerStatistics.getDieValuesCount().get(k));
+		for (k++; k<=6*navigationPane.getNumberDice(); k++) {
+			System.out.print(", " + k + "-" + playerStatistics.getDieValuesCount().get(k));
 		}
 		System.out.print("\n");
-		System.out.print(puppetName + "traversed: ");
+		System.out.print(puppetName + " traversed: ");
 		System.out.print("up-" + playerStatistics.getConnectionsCount().get("up") + ", ");
-		System.out.print("down-" + playerStatistics.getConnectionsCount().get("down\n"));
+		System.out.print("down-" + playerStatistics.getConnectionsCount().get("down") + "\n");
 	}
 
   Puppet(GamePane gp, NavigationPane np, String puppetImage)
