@@ -160,7 +160,7 @@ public class GamePane extends GameGrid
 	  for(i=0; i<numberOfPlayers; i++) {
 		  
 		  //check this isn't current player
-		  if(puppets.get(i).getPuppetName() != getPuppet().getPuppetName()) {
+		  if(i != currentPuppetIndex) {
 			  
 			  int max_roll = 6*np.getNumberDice();
 			  //iterate through connections
@@ -188,5 +188,5 @@ public class GamePane extends GameGrid
 	  }
 	  
   }
-
+  
 }

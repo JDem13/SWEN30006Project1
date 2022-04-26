@@ -107,7 +107,7 @@ public class Puppet extends Actor
   void moveBackwardsCell()
   {
     int tens = cellIndex / 10;
-    int ones = cellIndex - tens * 10;
+    int ones = cellIndex % 10;
     // handle case if puppet is moved back from square 1
     if(cellIndex == 1)
     {
