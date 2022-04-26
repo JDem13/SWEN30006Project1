@@ -144,18 +144,10 @@ public class GamePane extends GameGrid
   }
   
   public void reverseSnakes_Ladders() {
-	  //iterate through all connections
-	  int i;
-	  for(i=0; i<connections.size(); i++) {
-		  // switch start with end cell and location
-		  int temp_cell = connections.get(i).cellStart;
-		  Location temp_loc = connections.get(i).getLocStart();
-		  connections.get(i).cellStart = connections.get(i).cellEnd;
-		  connections.get(i).cellEnd = temp_cell;
-		  connections.get(i).setLocStart(connections.get(i).getLocEnd());
-		  connections.get(i).setLocEnd(temp_loc);
-		  
-	  }
+	  // reverse all connections
+	  for(Connection con : connections) con.reverse();
+	  System.out.println(getPuppet().getPuppetName() +
+			             " switched connections orientation");
   }
   
   public void toggleStrategy() {
@@ -191,9 +183,8 @@ public class GamePane extends GameGrid
 	  }
 	  
 	  if(up >= down) {
+		  np.getToggleBtn().setChecked(!np.getToggleBtn().isChecked());
 		  reverseSnakes_Ladders();
-		  System.out.println(getPuppet().getPuppetName() +
-				             " switched connections orientation");
 	  }
 	  
   }

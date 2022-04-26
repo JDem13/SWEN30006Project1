@@ -108,7 +108,12 @@ public class Puppet extends Actor
   {
     int tens = cellIndex / 10;
     int ones = cellIndex - tens * 10;
-    if (tens % 2 == 0)     // Cells starting left 01, 21, .. 81
+    // handle case if puppet is moved back from square 1
+    if(cellIndex == 1)
+    {
+    	setLocation(gamePane.startLocation);
+    }
+    else if (tens % 2 == 0)     // Cells starting left 01, 21, .. 81
     {
       if (ones == 1 && cellIndex > 0)
         setLocation(new Location(getX(), getY() + 1));

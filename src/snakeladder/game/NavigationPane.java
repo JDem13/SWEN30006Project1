@@ -74,6 +74,7 @@ public class NavigationPane extends GameGrid
   private boolean isAuto;
   private GGCheckButton autoChk;
   private boolean isToggle = false;
+  private boolean canToggle = false;
   private GGCheckButton toggleCheck =
           new GGCheckButton("Toggle Mode", YELLOW, TRANSPARENT, isToggle);
   private int nbRolls = 0;
@@ -187,6 +188,10 @@ public class NavigationPane extends GameGrid
     die6Button.addButtonListener(manualDieButton);
   }
 
+  GGCheckButton getToggleBtn() {
+	  return toggleCheck;
+  }
+  
   private int[] getDieValue() {
 	  
 	 int rolledVals[] = new int[numberDice];
@@ -232,10 +237,8 @@ public class NavigationPane extends GameGrid
     toggleCheck.addCheckButtonListener(new GGCheckButtonListener() {
       @Override
       public void buttonChecked(GGCheckButton ggCheckButton, boolean checked) {
-        isToggle = checked;
-        if (isToggle) {
-        	gp.reverseSnakes_Ladders();
-        }
+        if(canToggle) gp.reverseSnakes_Ladders();
+        else toggleCheck.setChecked(!checked);
       }
     });
 
@@ -313,6 +316,16 @@ public class NavigationPane extends GameGrid
     }
     else
     {
+   	  //call automated toggle function if on auto
+      if(gp.getPuppet().isAuto() || isAuto) gp.toggleStrategy();
+      // Otherwise allow player to toggle if they want
+      else {
+     	  showStatus("Can now toggle...");
+      	  canToggle = true;
+      	  gp.refresh();
+      	  delay(2500);
+    	  canToggle = false;
+      }
       playSound(GGSound.CLICK);
       showStatus("Done. Click the hand!");
       String result = gp.getPuppet().getPuppetName() + " - pos: " + currentIndex;
@@ -336,8 +349,6 @@ public class NavigationPane extends GameGrid
     showPips("Pips: " + nb);
     showScore("# Rolls: " + (++nbRolls));   
     gp.getPuppet().go(nb);
-    //call automated toggle function
-    gp.toggleStrategy();
   }
 
   void prepareBeforeRoll() {

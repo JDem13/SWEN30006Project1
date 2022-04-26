@@ -17,6 +17,15 @@ public abstract class Connection
     locEnd = GamePane.cellToLocation(cellEnd);
   }
 
+  void reverse() {
+	  int temp_cell = cellStart;
+	  Location temp_loc = locStart;
+	  cellStart = cellEnd;
+	  cellEnd = temp_cell;
+	  locStart = locEnd;
+	  locEnd = temp_loc;
+  }
+  
   String imagePath;
   
   public void setLocStart(Location loc_start) {
