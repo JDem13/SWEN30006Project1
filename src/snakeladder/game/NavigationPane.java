@@ -287,7 +287,7 @@ public class NavigationPane extends GameGrid
     System.out.println("Result: " + text);
   }
 
-  void prepareRoll(int currentIndex)
+  void prepareTurn(int currentIndex)
   {
 	totalRoll = 0;
 	rollsThisTurn = 0;

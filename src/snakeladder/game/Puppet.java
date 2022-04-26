@@ -166,7 +166,7 @@ public class Puppet extends Actor
         cellIndex = currentCon.cellEnd;
         setLocationOffset(new Point(0, 0));
         currentCon = null;
-        navigationPane.prepareRoll(cellIndex);
+        navigationPane.prepareTurn(cellIndex);
       }
       return;
     }
@@ -179,7 +179,7 @@ public class Puppet extends Actor
       if (cellIndex == 100)  // Game over
       {
         setActEnabled(false);
-        navigationPane.prepareRoll(cellIndex);
+        navigationPane.prepareTurn(cellIndex);
         return;
       }
 
@@ -197,7 +197,7 @@ public class Puppet extends Actor
         	  //ignore connection
         	  currentCon = null;
         	  setActEnabled(false);
-              navigationPane.prepareRoll(cellIndex);
+              navigationPane.prepareTurn(cellIndex);
           }
           else {
         	  gamePane.setSimulationPeriod(50);
@@ -225,7 +225,7 @@ public class Puppet extends Actor
         else
         {
           setActEnabled(false);
-          navigationPane.prepareRoll(cellIndex);
+          navigationPane.prepareTurn(cellIndex);
         }
         
         
