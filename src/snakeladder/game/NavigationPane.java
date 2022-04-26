@@ -20,10 +20,7 @@ public class NavigationPane extends GameGrid
       while (true)
       {
         Monitor.putSleep();
-        handBtn.show(1);
-        roll(getDieValue());
-        delay(1000);
-        handBtn.show(0);
+        autoRoll();
       }
     }
 
@@ -75,6 +72,7 @@ public class NavigationPane extends GameGrid
   private GGCheckButton autoChk;
   private boolean isToggle = false;
   private boolean canToggle = false;
+  private boolean canRoll = true;
   private GGCheckButton toggleCheck =
           new GGCheckButton("Toggle Mode", YELLOW, TRANSPARENT, isToggle);
   private int nbRolls = 0;
@@ -83,6 +81,8 @@ public class NavigationPane extends GameGrid
   private java.util.List<java.util.List<Integer>> dieValues = new ArrayList<>();
   private GamePlayCallback gamePlayCallback;
   private int numberDice;
+  private int rollsThisTurn = 0;
+  private int totalRoll = 0;
 
   NavigationPane(Properties properties)
   {
@@ -158,18 +158,27 @@ public class NavigationPane extends GameGrid
 
     @Override
     public void buttonClicked(GGButton ggButton) {
-      System.out.println("manual die button clicked");
-      if (ggButton instanceof CustomGGButton) {
+      if (canRoll && ggButton instanceof CustomGGButton) {
         CustomGGButton customGGButton = (CustomGGButton) ggButton;
         int tag = customGGButton.getTag();
         System.out.println("manual die button clicked - tag: " + tag);
-        int[] tags = new int[1];
-        tags[0] = tag;
         prepareBeforeRoll();
-        roll(tags);
+        roll(tag);
       }
     }
   }
+  
+  private void autoRoll() {
+	  handBtn.show(1);
+      roll(getDieValue());
+      delay(1000);
+      handBtn.show(0);
+  }
+  
+  void tryAutoRoll() {
+	  if(isAuto || gp.getPuppet().isAuto()) autoRoll();
+  }
+  
   void addDieButtons() {
     ManualDieButton manualDieButton = new ManualDieButton();
 
@@ -192,28 +201,14 @@ public class NavigationPane extends GameGrid
 	  return toggleCheck;
   }
   
-  private int[] getDieValue() {
-	  
-	 int rolledVals[] = new int[numberDice];
-	 int k;
+  private int getDieValue() {
+	 int currentRound = nbRolls / gp.getNumberOfPlayers();
+	 int playerIndex = nbRolls % gp.getNumberOfPlayers();
 	 
-	 for(k=0; k<numberDice ; k++) {
-	  
-		 if (dieValues == null) {
-			 rolledVals[k] = RANDOM_ROLL_TAG;
-		 }
-		 else {
-			 int currentRound = nbRolls / gp.getNumberOfPlayers();
-			 int playerIndex = nbRolls % gp.getNumberOfPlayers();
-			 if (dieValues.get(playerIndex).size() > numberDice*currentRound + k) {
-				 rolledVals[k] = dieValues.get(playerIndex).get(numberDice*currentRound + k);
-			 }
-			 else {
-				 rolledVals[k] = RANDOM_ROLL_TAG;
-			 }
-		 }
+	 if (dieValues != null && dieValues.get(playerIndex).size() > numberDice*currentRound + rollsThisTurn) {
+		 return dieValues.get(playerIndex).get(numberDice*currentRound + rollsThisTurn);
 	 }
-	return rolledVals;
+	 else return -1;
   }
 
   void createGui()
@@ -294,6 +289,10 @@ public class NavigationPane extends GameGrid
 
   void prepareRoll(int currentIndex)
   {
+	totalRoll = 0;
+	rollsThisTurn = 0;
+	allowRolling(true);
+	showPips("");
     if (currentIndex == 100)  // Game over
     {
       playSound(GGSound.FADE);
@@ -313,6 +312,7 @@ public class NavigationPane extends GameGrid
     	  gp.getAllPuppets().get(i).printPlayerStatistics();
       }
       gp.resetAllPuppets();
+      nbRolls = 0;
     }
     else
     {
@@ -343,12 +343,13 @@ public class NavigationPane extends GameGrid
     }
   }
 
-  void startMoving(int nb)
+  void startMoving()
   {
     showStatus("Moving...");
-    showPips("Pips: " + nb);
+    showPips("Total roll: " + totalRoll);
     showScore("# Rolls: " + (++nbRolls));   
-    gp.getPuppet().go(nb);
+    gp.getPuppet().go(totalRoll);
+    gp.getPuppet().getPlayerStatistics().addDieRoll(totalRoll);
   }
 
   void prepareBeforeRoll() {
@@ -362,38 +363,34 @@ public class NavigationPane extends GameGrid
 
   public void buttonClicked(GGButton btn)
   {
-    System.out.println("hand button clicked");
-    prepareBeforeRoll();
-    roll(getDieValue());
+	  if(canRoll) {
+	    System.out.println("hand button clicked");
+	    prepareBeforeRoll();
+	    roll(getDieValue());
+	  }
   }
 
-  private void roll(int[] rollNumber)
+  void allowRolling(boolean val) { 
+	  canRoll = val;
+	  handBtn.setEnabled(val);
+  }
+  
+  private void roll(int rollNumber)
   {
 	  
-	int k;
-	int nb = 0;
-	int n_temp = 0;
-	
-	//sum total rolled value
-	
-	for (k=0; k < numberDice; k++) {
+	if (rollNumber == RANDOM_ROLL_TAG) {
+    	rollNumber = ServicesRandom.get().nextInt(6) + 1;    		
+    }
 		
-		n_temp = rollNumber[k]; 
-		
-		if (n_temp == RANDOM_ROLL_TAG) {
-    			n_temp = ServicesRandom.get().nextInt(6) + 1;    		
-    		}
-		
-		nb += n_temp;
-	}
-	
-	gp.getPuppet().getPlayerStatistics().addDieRoll(nb);
-    
 	showStatus("Rolling...");
-	showPips("");
 
 	removeActors(Die.class);
-	Die die = new Die(nb, n_temp, this);
+	allowRolling(false);
+	Die die;
+	if(rollsThisTurn == numberDice - 1) die = new Die(rollNumber, this, true);
+	else die = new Die(rollNumber, this, false);
+	rollsThisTurn++;
+	totalRoll += rollNumber;
 	addActor(die, dieBoardLocation);
   }
 

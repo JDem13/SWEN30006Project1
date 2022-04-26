@@ -6,12 +6,14 @@ public class Die extends Actor
 {
   private NavigationPane np;
   private int nb;
+  private boolean lastDie;
 
-  Die(int nb, int temp, NavigationPane np)
+  Die(int nb, NavigationPane np, boolean lastDie)
   {
-    super("sprites/pips" + temp + ".gif", 7);
-    this.nb = nb;
+    super("sprites/pips" + nb + ".gif", 7);
     this.np = np;
+    this.nb = nb;
+    this.lastDie = lastDie;
   }
 
   public void act()
@@ -20,7 +22,10 @@ public class Die extends Actor
     if (getIdVisible() == 6)
     {
       setActEnabled(false);
-      np.startMoving(nb);
+      np.allowRolling(!lastDie);
+      np.showPips("Pips: " + nb);
+      if(lastDie) np.startMoving();
+      else np.tryAutoRoll();
     }
   }
 
